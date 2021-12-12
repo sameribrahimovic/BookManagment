@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookManagment", "BookManagment\BookManagment.csproj", "{58AC13D1-AAB1-458E-8454-76C95FB78836}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{500505DF-E778-48F2-8A19-9384BFD0FAA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{5CE3DB7D-6BBE-492E-999D-1010C40E1456}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58AC13D1-AAB1-458E-8454-76C95FB78836}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58AC13D1-AAB1-458E-8454-76C95FB78836}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58AC13D1-AAB1-458E-8454-76C95FB78836}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58AC13D1-AAB1-458E-8454-76C95FB78836}.Release|Any CPU.Build.0 = Release|Any CPU
+		{500505DF-E778-48F2-8A19-9384BFD0FAA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{500505DF-E778-48F2-8A19-9384BFD0FAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{500505DF-E778-48F2-8A19-9384BFD0FAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{500505DF-E778-48F2-8A19-9384BFD0FAA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CE3DB7D-6BBE-492E-999D-1010C40E1456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CE3DB7D-6BBE-492E-999D-1010C40E1456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CE3DB7D-6BBE-492E-999D-1010C40E1456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CE3DB7D-6BBE-492E-999D-1010C40E1456}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CC543318-E686-4AFE-87C7-C2B86516580A}
+	EndGlobalSection
+EndGlobal
