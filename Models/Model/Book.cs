@@ -20,6 +20,10 @@ namespace Models.Model
         [Required]
         public double Price { get; set; }
 
+        [ForeignKey("Genre")]
+        public int? Genre_Id { get; set; }
+        public Genre Genre { get; set; }
+
         [ForeignKey("BookDetail")]
         public int? BookDetail_Id { get; set; }
         public BookDetail BookDetail { get; set; }

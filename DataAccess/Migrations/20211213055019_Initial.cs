@@ -38,6 +38,19 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Genres",
+                columns: table => new
+                {
+                    Genre_Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Genres", x => x.Genre_Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Publishers",
                 columns: table => new
                 {
@@ -59,6 +72,7 @@ namespace DataAccess.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ISBN = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
+                    Genre_Id = table.Column<int>(type: "int", nullable: true),
                     BookDetail_Id = table.Column<int>(type: "int", nullable: true),
                     Publisher_Id = table.Column<int>(type: "int", nullable: false)
                 },
@@ -70,6 +84,12 @@ namespace DataAccess.Migrations
                         column: x => x.BookDetail_Id,
                         principalTable: "BookDetails",
                         principalColumn: "BookDetail_Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Books_Genres_Genre_Id",
+                        column: x => x.Genre_Id,
+                        principalTable: "Genres",
+                        principalColumn: "Genre_Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Books_Publishers_Publisher_Id",
@@ -116,6 +136,13 @@ namespace DataAccess.Migrations
                 filter: "[BookDetail_Id] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Books_Genre_Id",
+                table: "Books",
+                column: "Genre_Id",
+                unique: true,
+                filter: "[Genre_Id] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Books_Publisher_Id",
                 table: "Books",
                 column: "Publisher_Id");
@@ -134,6 +161,9 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "BookDetails");
+
+            migrationBuilder.DropTable(
+                name: "Genres");
 
             migrationBuilder.DropTable(
                 name: "Publishers");

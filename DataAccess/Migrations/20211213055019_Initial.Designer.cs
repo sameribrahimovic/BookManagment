@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211212170027_Initial")]
+    [Migration("20211213055019_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,6 +54,9 @@ namespace DataAccess.Migrations
                     b.Property<int?>("BookDetail_Id")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Genre_Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("ISBN")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -74,6 +77,10 @@ namespace DataAccess.Migrations
                     b.HasIndex("BookDetail_Id")
                         .IsUnique()
                         .HasFilter("[BookDetail_Id] IS NOT NULL");
+
+                    b.HasIndex("Genre_Id")
+                        .IsUnique()
+                        .HasFilter("[Genre_Id] IS NOT NULL");
 
                     b.HasIndex("Publisher_Id");
 
@@ -116,6 +123,22 @@ namespace DataAccess.Migrations
                     b.ToTable("BookDetails");
                 });
 
+            modelBuilder.Entity("Models.Model.Genre", b =>
+                {
+                    b.Property<int>("Genre_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Genre_Id");
+
+                    b.ToTable("Genres");
+                });
+
             modelBuilder.Entity("Models.Model.Publisher", b =>
                 {
                     b.Property<int>("Publisher_Id")
@@ -138,6 +161,10 @@ namespace DataAccess.Migrations
                         .WithOne("Book")
                         .HasForeignKey("Models.Model.Book", "BookDetail_Id");
 
+                    b.HasOne("Models.Model.Genre", "Genre")
+                        .WithOne("Book")
+                        .HasForeignKey("Models.Model.Book", "Genre_Id");
+
                     b.HasOne("Models.Model.Publisher", "Publisher")
                         .WithMany("Books")
                         .HasForeignKey("Publisher_Id")
@@ -145,6 +172,8 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("BookDetail");
+
+                    b.Navigation("Genre");
 
                     b.Navigation("Publisher");
                 });
@@ -179,6 +208,11 @@ namespace DataAccess.Migrations
                 });
 
             modelBuilder.Entity("Models.Model.BookDetail", b =>
+                {
+                    b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("Models.Model.Genre", b =>
                 {
                     b.Navigation("Book");
                 });
