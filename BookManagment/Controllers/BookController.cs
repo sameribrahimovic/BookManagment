@@ -22,7 +22,8 @@ namespace BookManagment.Controllers
             //List<Book> books = _db.Books.ToList();
 
             //3. Way to load publishers - Eager Loading - does one query per loading
-            List<Book> books = _db.Books.Include(p => p.Publisher).ToList();
+            List<Book> books = _db.Books.Include(p => p.Publisher)
+                                        .Include(ba => ba.BookAuthors).ThenInclude(a => a.Author).ToList();
 
 
             //load publisher into Index page of Books
