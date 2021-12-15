@@ -5,6 +5,7 @@ using Models.Model;
 using Models.ViewModel;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookManagment.Controllers
 {
@@ -18,17 +19,21 @@ namespace BookManagment.Controllers
         }
         public IActionResult Index()
         {
-            List<Book> books = _db.Books.ToList();
+            //List<Book> books = _db.Books.ToList();
+
+            //3. Way to load publishers - Eager Loading - does one query per loading
+            List<Book> books = _db.Books.Include(p => p.Publisher).ToList();
+
 
             //load publisher into Index page of Books
-            foreach (var item in books)
-            {
-                //basic sample, not that good way - search database for every single record(Book)
-                //item.Publisher = _db.Publishers.FirstOrDefault(p => p.Publisher_Id == item.Publisher_Id);
+            //foreach (var item in books)
+            //{
+            //    //basic sample, not that good way - search database for every single record(Book)
+            //    //item.Publisher = _db.Publishers.FirstOrDefault(p => p.Publisher_Id == item.Publisher_Id);
 
-                //explicite loading - bether way, because less times to search database, depends how much Publishers is in Book table
-                _db.Entry(item).Reference(p=>p.Publisher).Load();
-            }
+            //    //explicite loading - bether way, because less times to search database, depends how much Publishers is in Book table
+            //    //_db.Entry(item).Reference(p=>p.Publisher).Load();
+            //}
             return View(books);
         }
         public IActionResult Upsert(int? id)
@@ -74,6 +79,44 @@ namespace BookManagment.Controllers
             var bookFromDb = _db.Books.FirstOrDefault(b => b.Book_Id == id);
             _db.Books.Remove(bookFromDb);
             _db.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+        public IActionResult Details(int? id)
+        {
+            BookVM obj = new BookVM();
+
+            if (id == null)
+            {
+                return View(obj);
+            }
+            //else edit
+            obj.Book = _db.Books.Include(bd => bd.BookDetail).FirstOrDefault(u => u.Book_Id == id); //incude - eager loading
+            //book load
+            //obj.Book.BookDetail = _db.BookDetails.FirstOrDefault(b => b.BookDetail_Id == obj.Book.BookDetail_Id); // we dont need this if we use eager loading - line abowe
+            if (id == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Details(BookVM obj)
+        {
+            if (obj.Book.BookDetail.BookDetail_Id == 0) //if - create
+            {
+                _db.BookDetails.Add(obj.Book.BookDetail);
+                _db.SaveChanges();
+
+                var bookFromDb = _db.Books.FirstOrDefault(b => b.Book_Id == obj.Book.Book_Id); //base on this, we will retrive a book
+                bookFromDb.BookDetail_Id = obj.Book.BookDetail.BookDetail_Id; //update bookFromDb and save, manualy populate book detail
+                _db.SaveChanges();
+            }
+            else //else - update
+            {
+                _db.BookDetails.Update(obj.Book.BookDetail);
+                _db.SaveChanges();
+            }
             return RedirectToAction(nameof(Index));
         }
     }
