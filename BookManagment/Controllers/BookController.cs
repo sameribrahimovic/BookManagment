@@ -119,5 +119,52 @@ namespace BookManagment.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult ManageAuthors(int id)
+        {
+            BookAuthorVM obj = new BookAuthorVM
+            {
+                BookAuthorsList = _db.BookAuthors.Include(a => a.Author).Include(a => a.Book)
+                                                .Where(a => a.Book_Id == id).ToList(),
+                BookAuthor = new BookAuthor()
+                {
+                    Book_Id = id
+                },
+                Book = _db.Books.FirstOrDefault(b => b.Book_Id == id)
+            };
+            List<int> tempListOfAssignedAuthors = obj.BookAuthorsList.Select(x => x.Author_Id).ToList();
+            var tempList = _db.Authors.Where(x => !tempListOfAssignedAuthors.Contains(x.Author_Id)).ToList();
+
+            //populate dropdown
+            obj.AuthorList = tempList.Select(x => new SelectListItem
+            {
+                Text = x.FullName,
+                Value = x.Author_Id.ToString()
+            });
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        public IActionResult ManageAuthors(BookAuthorVM bookAuthorVM)
+        {
+            if (bookAuthorVM.BookAuthor.Book_Id !=0 && bookAuthorVM.BookAuthor.Author_Id != 0)
+            {
+                _db.BookAuthors.Add(bookAuthorVM.BookAuthor);
+                _db.SaveChanges();
+            }
+            return RedirectToAction(nameof(ManageAuthors), new { @id = bookAuthorVM.BookAuthor.Book_Id });
+        }
+
+        [HttpPost]
+        public IActionResult RemoveAuthors(int authorId, BookAuthorVM bookAuthorVM)
+        {
+            int bookId = bookAuthorVM.Book.Book_Id;
+            BookAuthor bookAuthor = _db.BookAuthors.FirstOrDefault(x => x.Author_Id == authorId && x.Book_Id == bookId);
+            _db.BookAuthors.Remove(bookAuthor);
+            _db.SaveChanges();
+            
+            return RedirectToAction(nameof(ManageAuthors), new { @id = bookId });
+        }
     }
 }
